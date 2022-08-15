@@ -21,7 +21,17 @@ export class ConverterComponent implements OnInit, OnDestroy {
   usd: FormControl;
   dealType: FormControl;
   currencyType: FormControl;
-  selectedCurrencyObj: CurrencyObject | undefined;
+  selectedCurrencyObj?: CurrencyObject;
+
+  readonly defaultCurrencyObjects: CurrencyObject = 
+  {
+    ccy: 'USD',
+    base_ccy: 'UAH',
+    buy: 1,
+    sale: 1,
+  };
+
+  currencyObjects = [this.defaultCurrencyObjects];
 
   private subscription?: Subscription;
 
@@ -32,17 +42,7 @@ export class ConverterComponent implements OnInit, OnDestroy {
     value: DealTypes. Buy,
   }];
 
-  readonly defaultCurrencyObjects: CurrencyObject = 
-  {
-    ccy: 'USD',
-    base_ccy: 'UAH',
-    buy: 35,
-    sale: 37,
-  };
-
-
-  currencyObjects = [this.defaultCurrencyObjects];
-
+ 
   constructor(
     private ServerCurrencies: CurrencyRateService,
   ) { 
@@ -65,21 +65,17 @@ export class ConverterComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.ServerCurrencies.getRate()
       .subscribe((ServerCurrencies) => {
-        console.log(`onInit${ServerCurrencies}`)
-        this.currencyObjects = ServerCurrencies;
-        this.selectedCurrencyObj = this.currencyObjects.find(currencyObj => currencyObj.ccy = this.currencyType.value)
+        this.currencyObjects = ServerCurrencies.filter(currencyObj => currencyObj.base_ccy === 'UAH');
+        this.selectedCurrencyObj = this.currencyObjects.find(currencyObj => currencyObj.ccy === this.currencyType.value)
       })
-
-    // this.subscription = this.form.valueChanges
-    // .subscribe((values) => console.log(values))
 
     this.dealType.valueChanges
       .subscribe(() => this.changeUAH())
 
     this.currencyType.valueChanges
       .subscribe((value) => {
-        console.log(`currType${value}`)
-        this.selectedCurrencyObj = this.currencyObjects.find(currencyObj => currencyObj.ccy = value)
+        this.selectedCurrencyObj = this.currencyObjects.find(currencyObj => currencyObj.ccy === value);
+        this.changeUAH();
       })
   }
 
@@ -88,7 +84,7 @@ export class ConverterComponent implements OnInit, OnDestroy {
       const rate = this.dealType.value === DealTypes.Sell
       ? this.selectedCurrencyObj.buy
       : this.selectedCurrencyObj.sale
-    this.usd.setValue(this.uah.value / rate)
+    this.usd.setValue(+(this.uah.value / rate).toFixed(3))
     } 
   }
 
@@ -97,7 +93,7 @@ export class ConverterComponent implements OnInit, OnDestroy {
       const rate = this.dealType.value === DealTypes.Sell
       ? this.selectedCurrencyObj.buy
       : this.selectedCurrencyObj.sale
-    this.uah.setValue(this.usd.value * rate)
+    this.uah.setValue(+(this.usd.value * rate).toFixed(3))
     }
   }
   

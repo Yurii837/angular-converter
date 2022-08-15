@@ -9,7 +9,7 @@
   </mat-form-field>
 
   <mat-form-field class="field" appearance="fill">
-    <mat-label>USD</mat-label>
+    <mat-label>{{currencyType.value}}</mat-label>
     <input (input)="changeUAH()" formControlName="usd" type="number" matInput placeholder="Enter amount">
   </mat-form-field>
 
