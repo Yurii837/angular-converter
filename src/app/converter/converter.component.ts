@@ -18,7 +18,7 @@ enum DealTypes {
 export class ConverterComponent implements OnInit, OnDestroy {
   form: FormGroup;
   uah: FormControl;
-  usd: FormControl;
+  ccyCur: FormControl;
   dealType: FormControl;
   currencyType: FormControl;
   selectedCurrencyObj?: CurrencyObject;
@@ -36,18 +36,19 @@ export class ConverterComponent implements OnInit, OnDestroy {
   private subscription?: Subscription;
 
   readonly  dealTypes = [{
-    value: DealTypes. Sell,
-  },
-  {
-    value: DealTypes. Buy,
-  }];
+      value: DealTypes. Sell,
+    },
+    {
+      value: DealTypes. Buy,
+    }
+  ];
 
  
   constructor(
     private ServerCurrencies: CurrencyRateService,
   ) { 
     this.uah = new FormControl(0);
-    this.usd = new FormControl(0);
+    this.ccyCur = new FormControl(null);
     this.dealType = new FormControl(DealTypes.Sell);
     this.currencyType = new FormControl('USD');
     this.selectedCurrencyObj = this.defaultCurrencyObjects;
@@ -56,11 +57,11 @@ export class ConverterComponent implements OnInit, OnDestroy {
     
     this.form = new FormGroup({
       uah: this.uah,
-      usd: this.usd,
+      ccyCur: this.ccyCur,
       dealType: this.dealType,
       currencyType: this.currencyType,
-    });
-  }
+    })
+  };
 
   ngOnInit(): void {
     this.ServerCurrencies.getRate()
@@ -77,27 +78,27 @@ export class ConverterComponent implements OnInit, OnDestroy {
         this.selectedCurrencyObj = this.currencyObjects.find(currencyObj => currencyObj.ccy === value);
         this.changeUAH();
       })
-  }
+  };
 
   changeUSD() {
     if(this.selectedCurrencyObj) {
       const rate = this.dealType.value === DealTypes.Sell
       ? this.selectedCurrencyObj.buy
       : this.selectedCurrencyObj.sale
-    this.usd.setValue(+(this.uah.value / rate).toFixed(3))
+    this.ccyCur.setValue(+(this.uah.value / rate).toFixed(3))
     } 
-  }
+  };
 
   changeUAH() {
     if(this.selectedCurrencyObj) {
       const rate = this.dealType.value === DealTypes.Sell
       ? this.selectedCurrencyObj.buy
       : this.selectedCurrencyObj.sale
-    this.uah.setValue(+(this.usd.value * rate).toFixed(3))
+    this.uah.setValue(+(this.ccyCur.value * rate).toFixed(3))
     }
-  }
+  };
   
   ngOnDestroy(): void {
     this.subscription?.unsubscribe();
-  }
-}
+  };
+};

@@ -1,0 +1,7 @@
+<div class="header">
+  <div class="header__description" (click)="reloadRates()">Current UAH rates</div>
+  <span class="header__rate" *ngFor="let curObj of currencyObjects" [title]="'sale - ' + curObj.sale +'  '+'bye - ' + curObj.buy">
+    {{curObj.ccy}} - 
+    {{curObj.sale}}
+  </span>
+</div>
