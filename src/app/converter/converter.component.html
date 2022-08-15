@@ -1,0 +1,30 @@
+<form class="form">
+  <mat-form-field appearance="fill">
+    <mat-label>Select currency to exchange</mat-label>
+    <mat-select>
+      <mat-option *ngFor="let curObj of currencyOobjects" [value]="curObj.ccy">
+        {{curObj.ccy}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field class="field" appearance="fill">
+    <mat-label>USD</mat-label>
+    <input type="number" matInput placeholder="Enter amount">
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>I want to</mat-label>
+    <mat-select>
+      <mat-option *ngFor="let option of dealTypes" [value]="option.value">
+        {{option.value}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field class="field" appearance="fill">
+    <mat-label>UAH</mat-label>
+    <input type="number" matInput placeholder="Enter amount">
+  </mat-form-field>
+</form>
+ 
