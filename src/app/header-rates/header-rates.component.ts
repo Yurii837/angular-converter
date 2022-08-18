@@ -14,7 +14,7 @@ export class HeaderRatesComponent implements OnInit {
     private ServerCurrencies: CurrencyRateService,
   ) { 
     this.currencyObjects;
-  }
+  };
 
   ngOnInit(): void {
     this.ServerCurrencies.getRate()
@@ -24,9 +24,7 @@ export class HeaderRatesComponent implements OnInit {
   };
 
   reloadRates() {
-    this.ServerCurrencies.getRate()
-      .subscribe((ServerCurrencies) => {
-        this.currencyObjects = ServerCurrencies.filter(currencyObj => currencyObj.base_ccy === 'UAH');
-      })
+    this.currencyObjects = undefined
+    this.ngOnInit()
   };
 }

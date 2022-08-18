@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { delay, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { CurrencyObject } from 'src/typedefs';
 
@@ -13,6 +13,9 @@ export class CurrencyRateService {
   ) { }
 
   getRate(): Observable<CurrencyObject[]> {
-    return this.http.get<CurrencyObject[]>('https://api.privatbank.ua/p24api/pubinfo?exchange&json&coursid=11');
+    return this.http.get<CurrencyObject[]>('https://api.privatbank.ua/p24api/pubinfo?exchange&json&coursid=11')
+    .pipe(
+      delay(2000),
+    )
   }
 }

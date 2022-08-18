@@ -10,12 +10,15 @@ import { AppComponent } from './app.component';
 import { ConverterComponent } from './converter/converter.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HeaderRatesComponent } from './header-rates/header-rates.component';
+import { Get5Pipe } from './Pipes/get5.pipe';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
     AppComponent,
     ConverterComponent,
     HeaderRatesComponent,
+    Get5Pipe,
   ],
   imports: [
     HttpClientModule,
@@ -25,6 +28,7 @@ import { HeaderRatesComponent } from './header-rates/header-rates.component';
     AppRoutingModule,
     BrowserAnimationsModule,
     ReactiveFormsModule,
+    MatProgressSpinnerModule
   ],
   providers: [],
   bootstrap: [AppComponent]
