@@ -12,3 +12,8 @@
   - angular material
   - ReactiveForms
   - angular ghpages
+
+  # ✨ Refactory changes(from 'Done' commit)
+   - Create Get5 pipe (to filter major currencies if there are more than 5)
+   - Create Global Params file to set input parameters
+   - Create enums, rename variables

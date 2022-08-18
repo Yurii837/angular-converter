@@ -1,8 +1,7 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { Subscription } from 'rxjs';
 import { CurrencyRateService } from '../currency-rate.service';
-import { CurrencyObject } from 'src/typedefs';
+import { DefaultCurrencyObject } from 'src/ConverterParams/InputParams';
 
 enum DealTypes {
   Buy = 'Buy',
@@ -15,25 +14,15 @@ enum DealTypes {
   styleUrls: ['./converter.component.scss']
 })
 
-export class ConverterComponent implements OnInit, OnDestroy {
+export class ConverterComponent implements OnInit {
   form: FormGroup;
-  uah: FormControl;
+  baseCcyCur: FormControl;
   ccyCur: FormControl;
   dealType: FormControl;
   currencyType: FormControl;
-  selectedCurrencyObj?: CurrencyObject;
 
-  readonly defaultCurrencyObjects: CurrencyObject = 
-  {
-    ccy: 'USD',
-    base_ccy: 'UAH',
-    buy: 1,
-    sale: 1,
-  };
-
-  currencyObjects = [this.defaultCurrencyObjects];
-
-  private subscription?: Subscription;
+  currencyObjects = [DefaultCurrencyObject];
+  selectedCurrencyObj? = DefaultCurrencyObject;
 
   readonly  dealTypes = [{
       value: DealTypes. Sell,
@@ -47,16 +36,15 @@ export class ConverterComponent implements OnInit, OnDestroy {
   constructor(
     private ServerCurrencies: CurrencyRateService,
   ) { 
-    this.uah = new FormControl(0);
+    this.baseCcyCur = new FormControl(0);
     this.ccyCur = new FormControl(null);
     this.dealType = new FormControl(DealTypes.Sell);
-    this.currencyType = new FormControl('USD');
-    this.selectedCurrencyObj = this.defaultCurrencyObjects;
+    this.currencyType = new FormControl(DefaultCurrencyObject.ccy);
 
-    this.uah.touched
+    this.baseCcyCur.touched
     
     this.form = new FormGroup({
-      uah: this.uah,
+      baseCcyCur: this.baseCcyCur,
       ccyCur: this.ccyCur,
       dealType: this.dealType,
       currencyType: this.currencyType,
@@ -66,39 +54,35 @@ export class ConverterComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.ServerCurrencies.getRate()
       .subscribe((ServerCurrencies) => {
-        this.currencyObjects = ServerCurrencies.filter(currencyObj => currencyObj.base_ccy === 'UAH');
+        this.currencyObjects = ServerCurrencies.filter(currencyObj => currencyObj.base_ccy === DefaultCurrencyObject.base_ccy)
         this.selectedCurrencyObj = this.currencyObjects.find(currencyObj => currencyObj.ccy === this.currencyType.value)
       })
 
     this.dealType.valueChanges
-      .subscribe(() => this.changeUAH())
+      .subscribe(() => this.changeBaseCcy())
 
     this.currencyType.valueChanges
       .subscribe((value) => {
-        this.selectedCurrencyObj = this.currencyObjects.find(currencyObj => currencyObj.ccy === value);
-        this.changeUAH();
+        this.selectedCurrencyObj = this.currencyObjects.find(currencyObj => currencyObj.ccy === value)
+        this.changeBaseCcy()
       })
   };
 
-  changeUSD() {
+  changeBaseCcy() {
     if(this.selectedCurrencyObj) {
       const rate = this.dealType.value === DealTypes.Sell
       ? this.selectedCurrencyObj.buy
       : this.selectedCurrencyObj.sale
-    this.ccyCur.setValue(+(this.uah.value / rate).toFixed(3))
+    this.baseCcyCur.setValue(+(this.ccyCur.value * rate).toFixed(3))
     } 
   };
 
-  changeUAH() {
+  changeCcy() {
     if(this.selectedCurrencyObj) {
       const rate = this.dealType.value === DealTypes.Sell
       ? this.selectedCurrencyObj.buy
       : this.selectedCurrencyObj.sale
-    this.uah.setValue(+(this.ccyCur.value * rate).toFixed(3))
+    this.ccyCur.setValue(+(this.baseCcyCur.value / rate).toFixed(3))
     }
-  };
-  
-  ngOnDestroy(): void {
-    this.subscription?.unsubscribe();
   };
 };
