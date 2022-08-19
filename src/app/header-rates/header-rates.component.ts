@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { DefaultCurrencyObject } from 'src/ConverterParams/InputParams';
+import { DefaultCurrencyObject } from '../ConverterParams/InputParams';
 import { CurrencyObject } from 'src/typedefs';
 import { CurrencyRateService } from '../currency-rate.service';
 

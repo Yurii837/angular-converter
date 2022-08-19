@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { CurrencyObject } from 'src/typedefs';
 
-import { Major5 } from 'src/ConverterParams/InputParams';
+import { Major5 } from '../ConverterParams/InputParams';
 
 @Pipe({
   name: 'get5'

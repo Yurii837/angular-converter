@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { delay, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { CurrencyObject } from 'src/typedefs';
-import { getEndpoint } from 'src/ConverterParams/InputParams';
+import { getEndpoint } from './ConverterParams/InputParams';
 
 @Injectable({
   providedIn: 'root'

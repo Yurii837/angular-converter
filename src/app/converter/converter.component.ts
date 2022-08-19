@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { CurrencyRateService } from '../currency-rate.service';
-import { DefaultCurrencyObject } from 'src/ConverterParams/InputParams';
+import { DefaultCurrencyObject } from '../ConverterParams/InputParams';
 
 enum DealTypes {
   Buy = 'Buy',
